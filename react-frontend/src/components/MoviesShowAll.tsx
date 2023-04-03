@@ -34,4 +34,3 @@ export const MoviesShowAll = () => {
     )
   }
 
-  export default App
