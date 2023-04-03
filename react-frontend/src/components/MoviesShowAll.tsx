@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Movie } from "../models/Movie";
 
-function App() {
+export const MoviesShowAll = () => {
     const [movies, setMovies] = useState([]);
 
     fetch("http://http://ec2-13-50-231-92.eu-north-1.compute.amazonaws.com/movies/")
