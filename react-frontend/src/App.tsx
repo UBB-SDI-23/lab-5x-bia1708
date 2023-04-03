@@ -2,11 +2,15 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import React from 'react'
+import MoviesShowAll from './components/MoviesShowAll'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
+    <React.Fragment>
+      <MoviesShowAll />
     <div className="App">
       <div>
         <a href="https://vitejs.dev" target="_blank">
@@ -29,6 +33,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </div>
+    </React.Fragment>
   )
 }
 
