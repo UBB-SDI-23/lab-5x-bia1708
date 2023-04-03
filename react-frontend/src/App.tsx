@@ -34,7 +34,7 @@ function App() {
       </p>
     </div>
     </React.Fragment>
-  )
+  );
 }
 
 export default App
