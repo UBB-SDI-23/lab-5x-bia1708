@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import React from 'react'
-import MoviesShowAll from './components/MoviesShowAll'
+import { MoviesShowAll } from './components/MoviesShowAll'
 
 function App() {
   const [count, setCount] = useState(0)
