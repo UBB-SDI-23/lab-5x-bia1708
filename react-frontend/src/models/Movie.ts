@@ -4,7 +4,8 @@ export interface Movie {
     id?: number;
     movie_text: string;
     release_date: number;
-    director: Director;
+    director_id: number;
+    director?: Director;
     imdb_score: number;
     votes: number;
 }
