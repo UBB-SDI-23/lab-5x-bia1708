@@ -3,7 +3,6 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import React from 'react'
-import { MoviesShowAll } from './components/MoviesShowAll'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppMenu } from './components/AppMenu'
 import { MovieDetails } from './components/MovieDetails'
