@@ -10,6 +10,7 @@ import {
 	Container,
 	IconButton,
 	Tooltip,
+    TextField,
 } from "@mui/material";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -22,10 +23,10 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { BACKEND_API_URL } from "../constants";
 import { Movie } from "../models/Movie";
 import { Director } from "../models/Director";
-import SortIcon from '@mui/icons-material/Sort';
 
-export const AllMovies = () => {
+export const SortMovies = () => {
 	const [directors, setDirectors] = useState<Director[]>([]);
+    const [input, setInput] = useState<number | undefined>();
 
 	useEffect(() => {
 		fetch(`${BACKEND_API_URL}/directors`)
@@ -35,12 +36,12 @@ export const AllMovies = () => {
 			});
 	}, []);
 
+    const [loading, setLoading] = useState(false);
 	const [movies, setMovies] = useState<Movie[]>([]);
-	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
         setLoading(true);
-		fetch(`${BACKEND_API_URL}/movies`)
+		fetch(`${BACKEND_API_URL}/movies/`)
 			.then((response) => response.json())
 			.then((data) => {
 				setMovies(data);
@@ -48,38 +49,45 @@ export const AllMovies = () => {
 			});
 	}, []);
 
+	const [filteredMovies, setFiltered] = useState<Movie[]>([]);
+	useEffect(() => {
+        setLoading(true);
+		fetch(`${BACKEND_API_URL}/movies/`)
+			.then((response) => response.json())
+			.then((data) => {
+				setFiltered(data);
+				setLoading(false);
+			});
+	}, []);
+
+
     const getDirectorById = (id: number) => {
 		return directors.find((director) => director.id === id) || directors[0];
+	};
+
+    const sortMoviesByReleaseDate = () => {
+		return [...movies].sort((a, b) => {if(a.release_date < b.release_date) return -1; else return 1;});
+	  };
+
+    const sortMovies = async (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		try {
+			setFiltered(filteredMovies => sortMoviesByReleaseDate())
+            console.log(filteredMovies);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
 		<Container>
 			<h1>Movie List</h1>
 
+            <button onClick={sortMovies}>Sort</button>
+
 			{loading && <CircularProgress />}
-			{!loading && movies.length === 0 && <p>No movies found</p>}
-			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/add`}>
-					<Tooltip title="Add a new movie" arrow>
-						<AddIcon color="primary" />
-					</Tooltip>
-				</IconButton>
-			)}
-			{!loading && (
-				<IconButton component={Link} sx={{ mr: 5 }} to={`/movies/filter/`}>
-					<Tooltip title="Filter Movies" arrow>
-						<FilterAltIcon color="primary" />
-					</Tooltip>
-				</IconButton>
-			)}
-			{!loading && (
-				<IconButton component={Link} sx={{ mr: 5 }} to={`/movies/sort/`}>
-					<Tooltip title="Sort Movies" arrow>
-						<SortIcon color="primary" />
-					</Tooltip>
-				</IconButton>
-			)}
-			{movies.length > 0 && (
+			{!loading && filteredMovies.length === 0 && <p>No movies found</p>}
+			{filteredMovies.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
 						<TableHead>
@@ -90,11 +98,10 @@ export const AllMovies = () => {
 								<TableCell align="right">Director</TableCell>
 								<TableCell align="center">Imdb Score</TableCell>
                                 <TableCell align="center">Votes</TableCell>
-								<TableCell align="center">Actions</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{movies.map((movie, index) => (
+							{filteredMovies.map((movie, index) => (
 								<TableRow key={movie.id}>
 									<TableCell component="th" scope="row">
 										{index + 1}
@@ -105,27 +112,9 @@ export const AllMovies = () => {
 										</Link>
 									</TableCell>
 									<TableCell align="right">{movie.release_date}</TableCell>
-									<TableCell align="right">{movie.director?.director_name}</TableCell>
+									<TableCell align="right">{getDirectorById(movie.director_id).director_name}</TableCell>
                                     <TableCell align="right">{movie.imdb_score}</TableCell>
                                     <TableCell align="right">{movie.votes}</TableCell>
-									<TableCell align="right">
-										<IconButton
-											component={Link}
-											sx={{ mr: 3 }}
-											to={`/movies/${movie.id}/details`}>
-											<Tooltip title="View movie details" arrow>
-												<ReadMoreIcon color="primary" />
-											</Tooltip>
-										</IconButton>
-
-										<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/${movie.id}/edit`}>
-											<EditIcon />
-										</IconButton>
-
-										<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/${movie.id}/delete`}>
-											<DeleteForeverIcon sx={{ color: "red" }} />
-										</IconButton>
-									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>

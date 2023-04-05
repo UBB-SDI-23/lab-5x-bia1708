@@ -11,6 +11,7 @@ import { AllMovies } from './components/AllMovies'
 import { FilterMovies } from './components/FilterMovies'
 import { MovieDelete } from './components/MovieDelete'
 import { MovieEdit } from './components/MovieEdit'
+import { SortMovies } from './components/MoviesSort'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
 					<Route path="/movies/:movieId/delete" element={<MovieDelete />} />
 					<Route path="/movies/add" element={<MovieAdd />} />
 					<Route path="/movies/filter" element={<FilterMovies />} />
+					<Route path="/movies/sort" element={<SortMovies />} />
 
 				</Routes>
 			</Router>
