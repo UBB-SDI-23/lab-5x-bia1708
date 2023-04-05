@@ -10,6 +10,7 @@ import { MovieAdd } from './components/MovieAdd'
 import { AllMovies } from './components/AllMovies'
 import { FilterMovies } from './components/FilterMovies'
 import { MovieDelete } from './components/MovieDelete'
+import { MovieEdit } from './components/MovieEdit'
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
 					{/* <Route path="/" element={<AppHome />} /> */}
 					<Route path="/movies/" element={<AllMovies />} />
 					<Route path="/movies/:movieId/details" element={<MovieDetails />} />
-					<Route path="/movies/:movieId/edit" element={<MovieDetails />} />
+					<Route path="/movies/:movieId/edit" element={<MovieEdit />} />
 					<Route path="/movies/:movieId/delete" element={<MovieDelete />} />
 					<Route path="/movies/add" element={<MovieAdd />} />
 					<Route path="/movies/filter" element={<FilterMovies />} />

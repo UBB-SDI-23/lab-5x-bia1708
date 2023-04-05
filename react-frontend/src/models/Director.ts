@@ -1,6 +1,6 @@
 
 export interface Director {
-    id: number;
+    id?: number;
     director_name: string;
     birth_date: string;
     star_sign: string;

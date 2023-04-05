@@ -25,7 +25,7 @@ export const MovieAdd = () => {
 	const [movie, setMovie] = useState<Movie>({
 		movie_text: "",
 		release_date: 0,
-		director_id: 0, // TODO: also read the teacher_id from the form (NOT from the user!)
+		director_id: 0,
 		//director: directors[0],
 		imdb_score: 0,
 		votes: 0,

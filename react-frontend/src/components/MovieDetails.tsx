@@ -23,10 +23,6 @@ export const MovieDetails = () => {
 	const { movieId } = useParams();
 	const [movie, setMovie] = useState<Movie>();
 
-	const getDirectorById = (id: number | undefined) => {
-		return directors.find((director) => director.id === id) || directors[0];
-	};
-
 	useEffect(() => {
 		const fetchMovie = async () => {
 			// TODO: use axios instead of fetch
@@ -49,7 +45,7 @@ export const MovieDetails = () => {
 					<h1>Movie Details</h1>
 					<p>Movie Title: {movie?.movie_text}</p>
 					<p>Movie Release Date: {movie?.release_date}</p>
-					<p>Movie Director: {getDirectorById(movie?.director_id)?.director_name}</p>
+					<p>Movie Director: {movie?.director?.director_name}</p>
 					<p>Movie Imdb Score: {movie?.imdb_score}</p>
                     <p>Movie Votes: {movie?.votes}</p>
 				</CardContent>

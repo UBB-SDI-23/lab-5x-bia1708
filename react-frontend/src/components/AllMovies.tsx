@@ -34,8 +34,8 @@ export const AllMovies = () => {
 			});
 	}, []);
 
-    const [loading, setLoading] = useState(false);
 	const [movies, setMovies] = useState<Movie[]>([]);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
         setLoading(true);
@@ -49,7 +49,7 @@ export const AllMovies = () => {
 
     const getDirectorById = (id: number) => {
 		return directors.find((director) => director.id === id) || directors[0];
-	  };
+	};
 
 	return (
 		<Container>
@@ -97,7 +97,7 @@ export const AllMovies = () => {
 										</Link>
 									</TableCell>
 									<TableCell align="right">{movie.release_date}</TableCell>
-									<TableCell align="right">{getDirectorById(movie.director_id).director_name}</TableCell>
+									<TableCell align="right">{movie.director?.director_name}</TableCell>
                                     <TableCell align="right">{movie.imdb_score}</TableCell>
                                     <TableCell align="right">{movie.votes}</TableCell>
 									<TableCell align="right">
