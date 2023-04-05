@@ -5,7 +5,7 @@ export const MoviesShowAll = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-        fetch("http://ec2-13-50-231-92.eu-north-1.compute.amazonaws.com/movies/")
+        fetch("http://16.170.169.198/movies/")
             .then((res) => res.json())
             .then((data) => setMovies(data));
     }, []);

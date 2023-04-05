@@ -1,7 +1,7 @@
 import { Director } from "./Director";
 
 export interface Movie {
-    id: number;
+    id?: number;
     movie_text: string;
     release_date: number;
     director: Director;
