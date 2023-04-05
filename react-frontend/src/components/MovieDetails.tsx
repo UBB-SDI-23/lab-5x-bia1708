@@ -43,13 +43,13 @@ export const MovieDetails = () => {
 		<Container>
 			<Card>
 				<CardContent>
-					<IconButton component={Link} sx={{ mr: 3 }} to={`/movies`}>
+					<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/`}>
 						<ArrowBackIcon />
 					</IconButton>{" "}
 					<h1>Movie Details</h1>
 					<p>Movie Title: {movie?.movie_text}</p>
 					<p>Movie Release Date: {movie?.release_date}</p>
-					<p>Movie Director: {getDirectorById(movie?.director_id).director_name}</p>
+					<p>Movie Director: {getDirectorById(movie?.director_id)?.director_name}</p>
 					<p>Movie Imdb Score: {movie?.imdb_score}</p>
                     <p>Movie Votes: {movie?.votes}</p>
 				</CardContent>
