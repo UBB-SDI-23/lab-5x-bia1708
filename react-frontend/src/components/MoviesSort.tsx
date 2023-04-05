@@ -112,7 +112,7 @@ export const SortMovies = () => {
 										</Link>
 									</TableCell>
 									<TableCell align="right">{movie.release_date}</TableCell>
-									<TableCell align="right">{getDirectorById(movie.director_id).director_name}</TableCell>
+									<TableCell align="right">{movie.director?.director_name}</TableCell>
                                     <TableCell align="right">{movie.imdb_score}</TableCell>
                                     <TableCell align="right">{movie.votes}</TableCell>
 								</TableRow>
