@@ -4,6 +4,13 @@ from movies.models import *
 
 
 class DirectorSerializer(serializers.ModelSerializer):
+    def validate_star_sign(self, value):
+        stars = ['taurus', 'pisces', 'leo', 'gemini', 'aquarius', 'libra', 'scorpio', 'sagittarius', 'aries', 'cancer',
+                 'capricorn', 'virgo']
+        if value not in stars:
+            raise serializers.ValidationError(f"{value} is not a star sign!")
+        return value
+
     class Meta:
         model = Director
         fields = '__all__'
@@ -25,7 +32,14 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class ActorSerializer(serializers.ModelSerializer):
-    movies = serializers.SerializerMethodField("get_movies")
+    # movies = serializers.SerializerMethodField("get_movies")
+
+    def validate_star_sign(self, value):
+        stars = ['taurus', 'pisces', 'leo', 'gemini', 'aquarius', 'libra', 'scorpio', 'sagittarius', 'aries', 'cancer',
+                 'capricorn', 'virgo']
+        if value not in stars:
+            raise serializers.ValidationError(f"{value} is not a star sign!")
+        return value
 
     def get_movies(self, obj):
         movies = Movie.objects.all()
@@ -38,7 +52,7 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ('id', 'actor_name', 'birth_date', 'star_sign', 'contact', 'votes', 'movies')
+        fields = ('id', 'actor_name', 'birth_date', 'star_sign', 'contact', 'votes')
 
 
 class DirectorWithMoviesSerializer(serializers.ModelSerializer):
@@ -63,11 +77,11 @@ class ActorMovieSerializer(serializers.ModelSerializer):
 
     movie = MovieSerializer(read_only=True)
 
-    # def validate_actor_id(self, value):
-    #     print(self.Meta.model._get_pk_val(self))
-    #     if value != self.Meta.model.pk:
-    #         raise serializers.ValidationError(f"Actor id doesn't match.")
-    #     return value
+    def validate_actor_payment(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Actor payment cannot be negative.')
+        else:
+            return value
 
     def validate_actor_id(self, data):
         actor_id = self.context['view'].kwargs['pk']

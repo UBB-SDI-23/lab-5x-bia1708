@@ -3,6 +3,7 @@ from movies import views, statistics
 
 urlpatterns = [
     path('movies/', views.MovieList.as_view()),
+    path('movies/<int:page>', views.MovieList.as_view()),
     path('movies/<int:pk>/', views.MovieDetail.as_view()),
     path('actors/', views.ActorList.as_view()),
     path('actors/<int:pk>/', views.ActorDetail.as_view()),

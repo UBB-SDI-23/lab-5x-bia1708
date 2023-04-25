@@ -42,7 +42,8 @@ class ActorMovie(models.Model):
 
     actor_payment = models.IntegerField(default=0)
     actor_awarded = models.BooleanField(default=False)
+    code = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.actor.actor_name} - {self.movie.movie_text} : {self.actor_payment}, awards: {self.actor_awarded}"
+        return f"{self.actor.actor_name} - {self.movie.movie_text} : {self.actor_payment}, awards: {self.actor_awarded}, code: {self.code}"
 
