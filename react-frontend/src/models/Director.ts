@@ -6,4 +6,5 @@ export interface Director {
     star_sign: string;
     contact: string;
     votes: number;
+    no_movies?: number;
 }

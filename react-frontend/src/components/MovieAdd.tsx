@@ -8,6 +8,8 @@ import { Director } from "../models/Director";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import Autosuggest from 'react-autosuggest';
 import axios from "axios";
 
 export const MovieAdd = () => {
@@ -47,9 +49,14 @@ export const MovieAdd = () => {
 		}
 	};
 
-	const getDirectorById = (id: number) => {
-		return directors.find((director) => director.id === id) || directors[0];
-	  };
+	const items = directors.map(dir => dir.director_name).map((option) => ({
+		target: { value: option }}));
+
+	// const inputProps = {
+	// 	value,
+	// 	onChange,
+	// 	placeholder: 'Type a name',
+	// 	};
 
 	return (
 		<Container>
@@ -75,6 +82,14 @@ export const MovieAdd = () => {
 							sx={{ mb: 2 }}
 							onChange={(event) => setMovie({ ...movie, release_date: parseInt(event.target.value) })}
 						/>
+						{/* <Autosuggest
+						suggestions={directors}
+						// onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+						// onSuggestionsClearRequested={onSuggestionsClearRequested}
+						getSuggestionValue={(suggestion: Director) => suggestion.id}
+						renderSuggestion={(suggestion: Director) => <span>{suggestion.director_name}</span>}
+						// inputProps={inputProps}
+						/> */}
 						<TextField
 							id="director"
 							label="Director"

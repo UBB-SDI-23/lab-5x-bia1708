@@ -28,7 +28,7 @@ export const MovieDetails = () => {
 			// TODO: use axios instead of fetch
 			// TODO: handle errors
 			// TODO: handle loading state
-			const response = await fetch(`${BACKEND_API_URL}/movies/${movieId}`);
+			const response = await fetch(`${BACKEND_API_URL}movies/${movieId}`);
 			const movie = await response.json();
 			setMovie(movie);
 		};

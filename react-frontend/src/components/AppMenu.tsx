@@ -12,7 +12,7 @@ export const AppMenu = () => {
 			<AppBar position="static" sx={{ marginBottom: "20px" }}>
 				<Toolbar>
 					<Typography variant="h6" component="div" sx={{ mr: 5 }}>
-						Manage Movies
+						Cinema Database
 					</Typography>
 					<Button
 						variant={path.startsWith("/movies") ? "outlined" : "text"}
@@ -22,6 +22,24 @@ export const AppMenu = () => {
 						sx={{ mr: 5 }}
 						startIcon={<LocalLibraryIcon />}>
 						Movies
+					</Button>
+					<Button
+						variant={path.startsWith("/directors") ? "outlined" : "text"}
+						to="/directors"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<LocalLibraryIcon />}>
+						Directors
+					</Button>
+					<Button
+						variant={path.startsWith("/actors") ? "outlined" : "text"}
+						to="/actors"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<LocalLibraryIcon />}>
+						Actors
 					</Button>
 				</Toolbar>
 			</AppBar>

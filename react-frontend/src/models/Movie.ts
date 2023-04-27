@@ -8,4 +8,5 @@ export interface Movie {
     director?: Director;
     imdb_score: number;
     votes: number;
+    actors_count?: number;
 }

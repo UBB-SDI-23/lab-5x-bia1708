@@ -28,24 +28,22 @@ import { Director } from "../models/Director";
 import axios from 'axios';
 import SortIcon from '@mui/icons-material/Sort';
 
-export const AllMovies = () => {
-	// const [directors, setDirectors] = useState<Director[]>([]);
-	const [movies, setMovies] = useState<Movie[]>([]);
+export const AllDirectors = () => {
+	const [directors, setDirectors] = useState<Director[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [pageCount, setPageCount] = useState(0);
   	const [currentPage, setCurrentPage] = useState(0);
 
 	const fetchData = async () => {
 		setLoading(true);
-		const response = await axios.get(`${BACKEND_API_URL}movies?page=${currentPage + 1}&page_size=${pageSize}`);
-		setMovies(response.data.results);
+		const response = await axios.get(`${BACKEND_API_URL}directors?page=${currentPage + 1}&page_size=${pageSize}`);
+		setDirectors(response.data.results);
+		console.log(directors);
 		setPageCount(response.data.page_count);
 		setLoading(false);
-		console.log("Page count:", pageCount);
 	};
 
 	const handlePageClick = (selectedPage: { selected: React.SetStateAction<number>; }) => {
-		console.log(currentPage);
 		setCurrentPage(selectedPage.selected);
 	};
 
@@ -63,18 +61,18 @@ export const AllMovies = () => {
 
 	return (
 		<Container>
-			<h1>Movie List</h1>
+			<h1>Director List</h1>
 
 			{loading && <CircularProgress />}
-			{!loading && movies.length === 0 && <p>No movies found</p>}
+			{!loading && directors.length === 0 && <p>No directors found</p>}
 			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/add`}>
-					<Tooltip title="Add a new movie" arrow>
+				<IconButton component={Link} sx={{ mr: 3 }} to={`/directors/add`}>
+					<Tooltip title="Add a new director" arrow>
 						<AddIcon color="primary" />
 					</Tooltip>
 				</IconButton>
 			)}
-			{!loading && (
+			{/* {!loading && (
 				<IconButton component={Link} sx={{ mr: 5 }} to={`/movies/filter/`}>
 					<Tooltip title="Filter Movies" arrow>
 						<FilterAltIcon color="primary" />
@@ -87,55 +85,53 @@ export const AllMovies = () => {
 						<SortIcon color="primary" />
 					</Tooltip>
 				</IconButton>
-			)}
-			{movies.length > 0 && (
+			)} */}
+			{directors.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
 						<TableHead>
 							<TableRow>
 								<TableCell>#</TableCell>
-								<TableCell align="right">Title</TableCell>
-								<TableCell align="right">Release Date</TableCell>
-								<TableCell align="right">Director</TableCell>
-								<TableCell align="center">Imdb Score</TableCell>
+								<TableCell align="right">Name</TableCell>
+								<TableCell align="right">Birth Date</TableCell>
+								<TableCell align="right">Star Sign</TableCell>
+								<TableCell align="center">Contact</TableCell>
                                 <TableCell align="center">Votes</TableCell>
-								<TableCell align="center">No. of Actors</TableCell>
+                                <TableCell align="center">No. of Movies</TableCell>
 								<TableCell align="center">Actions</TableCell>
-
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{movies.map((movie, index) => (
-								<TableRow key={movie.id}>
+							{directors.map((director, index) => (
+								<TableRow key={director.id}>
 									<TableCell component="th" scope="row">
 										{index + 1}
 									</TableCell>
 									<TableCell component="th" scope="row">
-										<Link to={`/movies/${movie.id}/details`} title="View movie details">
-											{movie.movie_text}
+										<Link to={`/directors/${director.id}/details`} title="View director details">
+											{director.director_name}
 										</Link>
 									</TableCell>
-									<TableCell align="right">{movie.release_date}</TableCell>
-									<TableCell align="right">{movie.director?.director_name}</TableCell>
-                                    <TableCell align="right">{movie.imdb_score}</TableCell>
-                                    <TableCell align="right">{movie.votes}</TableCell>
-                                    <TableCell align="right">{movie.actors_count}</TableCell>
-
+									<TableCell align="right">{director.birth_date}</TableCell>
+									<TableCell align="right">{director.star_sign}</TableCell>
+                                    <TableCell align="right">{director.contact}</TableCell>
+                                    <TableCell align="right">{director.votes}</TableCell>
+                                    <TableCell align="right">{director.no_movies}</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}
-											sx={{ mr: 2 }}
-											to={`/movies/${movie.id}/details`}>
-											<Tooltip title="View movie details" arrow>
+											sx={{ mr: 3 }}
+											to={`/directors/${director.id}/details`}>
+											<Tooltip title="View director details" arrow>
 												<ReadMoreIcon color="primary" />
 											</Tooltip>
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 2 }} to={`/movies/${movie.id}/edit`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/directors/${director.id}/edit`}>
 											<EditIcon />
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 2 }} to={`/movies/${movie.id}/delete`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/directors/${director.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
 									</TableCell>

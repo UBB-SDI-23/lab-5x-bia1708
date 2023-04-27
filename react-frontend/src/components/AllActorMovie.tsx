@@ -10,12 +10,10 @@ import {
 	Container,
 	IconButton,
 	Tooltip,
-	TextField,
-	Button,
 } from "@mui/material";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ReactPaginate from 'react-paginate';
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,18 +25,27 @@ import { Movie } from "../models/Movie";
 import { Director } from "../models/Director";
 import axios from 'axios';
 import SortIcon from '@mui/icons-material/Sort';
+import { ActorMovie } from "../models/ActorMovie";
+import { Actor } from "../models/Actor";
 
-export const AllMovies = () => {
+export const ActorMovies = () => {
 	// const [directors, setDirectors] = useState<Director[]>([]);
-	const [movies, setMovies] = useState<Movie[]>([]);
+    const { actorId } = useParams();
+    const [actor, setActor] = useState<Actor>();
+	const [actor_movies, setMovies] = useState<ActorMovie[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [pageCount, setPageCount] = useState(0);
   	const [currentPage, setCurrentPage] = useState(0);
 
 	const fetchData = async () => {
 		setLoading(true);
-		const response = await axios.get(`${BACKEND_API_URL}movies?page=${currentPage + 1}&page_size=${pageSize}`);
+		const response = await axios.get(`${BACKEND_API_URL}actors/${actorId}/movies?page=${currentPage + 1}`);
 		setMovies(response.data.results);
+
+        const response_actor = await axios.get(`${BACKEND_API_URL}actors/${actorId}/`);
+        setActor(response_actor.data);
+        console.log(actor);
+
 		setPageCount(response.data.page_count);
 		setLoading(false);
 		console.log("Page count:", pageCount);
@@ -49,32 +56,24 @@ export const AllMovies = () => {
 		setCurrentPage(selectedPage.selected);
 	};
 
-	const [pageSize, setPageSize] = useState(10);
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		event.preventDefault();
-		const newValue = event.target.value;
-		setPageSize(parseInt(newValue));
-	};
-
 	useEffect(() => {
 		fetchData();
-	}, [currentPage, pageSize]);
-
+	}, [currentPage]);
 
 	return (
 		<Container>
-			<h1>Movie List</h1>
+			<h1>{actor?.actor_name}</h1>
 
 			{loading && <CircularProgress />}
-			{!loading && movies.length === 0 && <p>No movies found</p>}
+			{!loading && actor_movies.length === 0 && <p>No movies found</p>}
 			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/add`}>
-					<Tooltip title="Add a new movie" arrow>
+				<IconButton component={Link} sx={{ mr: 3 }} to={`/actors/${actorId}/add`}>
+					<Tooltip title="Add a new movie to actor" arrow>
 						<AddIcon color="primary" />
 					</Tooltip>
 				</IconButton>
 			)}
-			{!loading && (
+			{/* {!loading && (
 				<IconButton component={Link} sx={{ mr: 5 }} to={`/movies/filter/`}>
 					<Tooltip title="Filter Movies" arrow>
 						<FilterAltIcon color="primary" />
@@ -87,8 +86,8 @@ export const AllMovies = () => {
 						<SortIcon color="primary" />
 					</Tooltip>
 				</IconButton>
-			)}
-			{movies.length > 0 && (
+			)} */}
+			{actor_movies.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
 						<TableHead>
@@ -100,42 +99,46 @@ export const AllMovies = () => {
 								<TableCell align="center">Imdb Score</TableCell>
                                 <TableCell align="center">Votes</TableCell>
 								<TableCell align="center">No. of Actors</TableCell>
+								<TableCell align="center">Actor Payment</TableCell>
+								<TableCell align="center">Actor Awarded</TableCell>
 								<TableCell align="center">Actions</TableCell>
 
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{movies.map((movie, index) => (
-								<TableRow key={movie.id}>
+							{actor_movies.map((am, index) => (
+								<TableRow key={am.id}>
 									<TableCell component="th" scope="row">
 										{index + 1}
 									</TableCell>
 									<TableCell component="th" scope="row">
-										<Link to={`/movies/${movie.id}/details`} title="View movie details">
-											{movie.movie_text}
+										<Link to={`/movies/${am.id}/details`} title="View movie details">
+											{am.movie?.movie_text}
 										</Link>
 									</TableCell>
-									<TableCell align="right">{movie.release_date}</TableCell>
-									<TableCell align="right">{movie.director?.director_name}</TableCell>
-                                    <TableCell align="right">{movie.imdb_score}</TableCell>
-                                    <TableCell align="right">{movie.votes}</TableCell>
-                                    <TableCell align="right">{movie.actors_count}</TableCell>
+									<TableCell align="right">{am.movie?.release_date}</TableCell>
+									<TableCell align="right">{am.movie?.director?.director_name}</TableCell>
+                                    <TableCell align="right">{am.movie?.imdb_score}</TableCell>
+                                    <TableCell align="right">{am.movie?.votes}</TableCell>
+                                    <TableCell align="right">{am.movie?.actors_count}</TableCell>
+                                    <TableCell align="right">{am.actor_payment}</TableCell>
+                                    <TableCell align="right">{am.actor_awarded.toString()}</TableCell>
 
 									<TableCell align="right">
 										<IconButton
 											component={Link}
-											sx={{ mr: 2 }}
-											to={`/movies/${movie.id}/details`}>
+											sx={{ mr: 3 }}
+											to={`/movies/${am.id}/details`}>
 											<Tooltip title="View movie details" arrow>
 												<ReadMoreIcon color="primary" />
 											</Tooltip>
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 2 }} to={`/movies/${movie.id}/edit`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/${am.id}/edit`}>
 											<EditIcon />
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 2 }} to={`/movies/${movie.id}/delete`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/movies/${am.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
 									</TableCell>
@@ -153,17 +156,6 @@ export const AllMovies = () => {
 			containerClassName={'pagination'}
 			activeClassName={'active'}
 			/>
-			<form onSubmit={(e) => {e.preventDefault()}}>
-						<TextField
-							id="page_size"
-							label="Page Size"
-							variant="outlined"
-							sx={{ mb: 2 }}
-							onChange={handleChange}
-						/>
-						<Button type="submit">Change Page Size</Button>
-
-			</form>
 		</Container>
 	);
 };

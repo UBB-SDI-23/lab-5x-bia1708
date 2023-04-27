@@ -1,9 +1,22 @@
 from django.db.models import Avg
 from rest_framework import serializers
 from movies.models import *
+from django.db import connection
 
 
 class DirectorSerializer(serializers.ModelSerializer):
+    no_movies = serializers.SerializerMethodField("get_no_movies")
+
+    def get_no_movies(self, obj: Director):
+        movies = Movie.objects.filter(director_id=obj.id)
+        return movies.count()
+
+    def validate_votes(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Vote count cannot be negative.')
+        else:
+            return value
+
     def validate_star_sign(self, value):
         stars = ['taurus', 'pisces', 'leo', 'gemini', 'aquarius', 'libra', 'scorpio', 'sagittarius', 'aries', 'cancer',
                  'capricorn', 'virgo']
@@ -13,12 +26,21 @@ class DirectorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Director
-        fields = '__all__'
+        fields = ('id', 'director_name', 'birth_date', 'star_sign', 'contact', 'votes', 'no_movies')
 
 
 class MovieSerializer(serializers.ModelSerializer):
     director_id = serializers.IntegerField(write_only=True)
     director = DirectorSerializer(read_only=True)
+
+    actors_count = serializers.SerializerMethodField("get_actors_count")
+
+    def get_actors_count(self, obj):
+        result = 0
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT COUNT(*) FROM movies_ActorMovie WHERE movie_id = {obj.id};")
+            result = cursor.fetchall()[0][0]
+        return result
 
     def validate_director_id(self, value):
         filter = Director.objects.filter(id=value)
@@ -28,11 +50,25 @@ class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('id', 'movie_text', 'release_date', 'director', 'director_id', 'imdb_score', 'votes')
+        fields = ('id', 'movie_text', 'release_date', 'director', 'director_id', 'imdb_score', 'votes', 'actors_count')
 
 
 class ActorSerializer(serializers.ModelSerializer):
     # movies = serializers.SerializerMethodField("get_movies")
+    movie_count = serializers.SerializerMethodField("get_movie_count")
+
+    def get_movie_count(self, obj):
+        result = 0
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT COUNT(*) FROM movies_ActorMovie WHERE actor_id = {obj.id};")
+            result = cursor.fetchall()[0][0]
+        return result
+
+    def validate_votes(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Vote count cannot be negative.')
+        else:
+            return value
 
     def validate_star_sign(self, value):
         stars = ['taurus', 'pisces', 'leo', 'gemini', 'aquarius', 'libra', 'scorpio', 'sagittarius', 'aries', 'cancer',
@@ -52,7 +88,7 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ('id', 'actor_name', 'birth_date', 'star_sign', 'contact', 'votes')
+        fields = ('id', 'actor_name', 'birth_date', 'star_sign', 'contact', 'votes', 'movie_count')
 
 
 class DirectorWithMoviesSerializer(serializers.ModelSerializer):
