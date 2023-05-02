@@ -86,11 +86,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SDI',
-        'USER': 'postgres',
+        'NAME': 'sdi-database',
+        'USER': 'localhost',
         'PASSWORD': 'mushu1708',
-        'HOST': 'localhost',
-        'PORT': '4000',
+        'HOST': 'sdi-database.clooavxcupdr.eu-north-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
